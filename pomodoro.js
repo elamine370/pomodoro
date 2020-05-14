@@ -5,12 +5,16 @@ class Pomodoro extends React.Component{
       breakLength: 5,
       sessionLength: {
       min: 25,
-      sec: '00',
+      sec: 0,
       }
     }
   }
   handleTime(){
-    let minutes = 25;
+    this.setState((state)=>{sessionLength:{sec: state.sessionLength.sec - 1}});
+    if(this.state.sessionLength.sec == -1){
+      this.state.sessionLength.sec = 59;
+      this.setState((state)=>{sessionLength:{min: state.sessionLength.min - 1}})
+    }
   }
   render(){
     return(
