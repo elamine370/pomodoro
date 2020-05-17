@@ -12,6 +12,7 @@ class Pomodoro extends React.Component{
   handleTime(){
     this.setState((state)=>{sessionLength:{sec: state.sessionLength.sec - 1}});
     if(this.state.sessionLength.sec == -1){
+
       this.state.sessionLength.sec = 59;
       this.setState((state)=>{sessionLength:{min: state.sessionLength.min - 1}})
     }
