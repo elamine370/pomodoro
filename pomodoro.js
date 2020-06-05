@@ -23,6 +23,7 @@ class Pomodoro extends React.Component{
       case "break-decrement":
         if(this.state.breakLength.min > 1){
           this.setState((state)=>({breakLength: {...state.breakLength, min: state.breakLength.min - 1}}));
+          this.setState(state=>({breakProcessed: state.breakLength}));
         }
         break;
       case "session-decrement":
@@ -38,6 +39,7 @@ class Pomodoro extends React.Component{
     switch(id){
       case "break-increment":
         this.setState((state)=>({breakLength: {...state.breakLength, min: state.breakLength.min + 1}}));
+        this.setState(state=>({breakProcessed: state.breakLength}));
         break;
       case "session-increment":
         this.setState((state)=>({sessionLength: {min: state.sessionLength.min + 1, sec: state.sessionLength.sec}}));
@@ -57,18 +59,18 @@ class Pomodoro extends React.Component{
     }
     else if(this.state[str].sec === 0){
       this.pause();
-      let audio = new Audio("https://fsb.zobj.net/download/b9a826YUZLz_jjBHMF8VAoaLw8wXtOshmGRk-3pRGaT2f8accB0tzoa-X7Rf3bOStFDrbsGZecIzXVQOr_YokwDzbilSMlby0MxrwhA4ckwj3Ap63B0C--n6SnTg/?a=web&c=72&f=japanese_school.mp3&special=1590859554-geVovJaL7wf%2B26mNhllfPi2YjP%2BhJc7yEUyxGH173JE%3D");
+      let audio = new Audio("https://fsa.zobj.net/download/bIBnqwrsx0nd2UGHZxlB0CY5m7_fS63qm7197yATvJv8eNACR5vwAcCENXoB_leOhEQQ2xAtBxPxOTqTsEWp7UFgTmhl0cv3d8T3gax9I01g3pvhT81UOeSblvfE/?a=web&c=72&f=japanese_school_bell.mp3&special=1591377532-Jumw%2F4%2FIRpGXK7TABUpBYLikBPv64u3NnDRrw3YLWOw%3D");
       audio.play();
       setTimeout(()=>{
-        if(str=='breakLength'){
-          this.setState(state=>({[str]: {min: 5, sec: 0}}));
+        if(str=='breakProcessed'){
+          this.setState(state=>({[str]: this.state.breakLength}));
           this.setState({actualState: 'Session'});
           this.play("sessionProcessed");
         }
         else{
           this.setState(state=>({[str]: state.sessionLength}));
           this.setState({actualState: 'Break'});
-          this.play("breakLength");
+          this.play("breakProcessed");
         }
 
       },7000);
@@ -96,8 +98,8 @@ class Pomodoro extends React.Component{
         <div id="session-label"><i id="session-decrement" ></i>Session Length<i id="session-increment"></i></div>
         <div><i id="session-decrement" class="fas fa-angle-down" onClick={this.decrement.bind(this,"session-decrement")}></i> <strong id="session-length">{this.state.sessionLength.min}</strong> <i id="session-increment" class="fas fa-angle-up" onClick={this.increment.bind(this,"session-increment")}></i></div>
         <div>{this.state.actualState}</div>
-        <div><strong id="session">{this.state.sessionProcessed.min}:{this.state.sessionProcessed.sec}</strong></div>
-        <div><i id="play" class="fa fa-play" onClick={this.play}></i> <i id="pause" class="fa fa-pause" onClick={this.pause}></i></div>
+        <div><strong id="session">{this.state.actualState === 'Session'? this.state.sessionProcessed.min : this.state.breakProcessed.min}:{this.state.actualState === 'Session'? this.state.sessionProcessed.sec : this.state.breakProcessed.sec}</strong></div>
+        <div><i id="play" class="fa fa-play" onClick={()=>{this.play()}}></i> <i id="pause" class="fa fa-pause" onClick={this.pause}></i></div>
         <div>
           <div>
             <div id="timer-label"></div>
@@ -109,8 +111,6 @@ class Pomodoro extends React.Component{
   }
 }
 ReactDOM.render(<Pomodoro />, document.getElementById("root"));
-
-
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <div id="root"></div>
