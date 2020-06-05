@@ -3,8 +3,10 @@ class Pomodoro extends React.Component{
     super(props);
     const sessionLength = {min: 25,
       sec: 0}
+    const breakLength = {min: 5, sec: 0};
     this.state = {
-      breakLength: {min: 5, sec: 0},
+      breakLength: breakLength,
+      breakProcessed: breakLength,
       sessionLength: sessionLength,
       sessionProcessed: sessionLength,
       actualState: 'Session'
@@ -58,22 +60,25 @@ class Pomodoro extends React.Component{
       let audio = new Audio("https://fsb.zobj.net/download/b9a826YUZLz_jjBHMF8VAoaLw8wXtOshmGRk-3pRGaT2f8accB0tzoa-X7Rf3bOStFDrbsGZecIzXVQOr_YokwDzbilSMlby0MxrwhA4ckwj3Ap63B0C--n6SnTg/?a=web&c=72&f=japanese_school.mp3&special=1590859554-geVovJaL7wf%2B26mNhllfPi2YjP%2BhJc7yEUyxGH173JE%3D");
       audio.play();
       setTimeout(()=>{
-        if(str=='Break'){
+        if(str=='breakLength'){
           this.setState(state=>({[str]: {min: 5, sec: 0}}));
           this.setState({actualState: 'Session'});
+          this.play("sessionProcessed");
         }
         else{
           this.setState(state=>({[str]: state.sessionLength}));
           this.setState({actualState: 'Break'});
+          this.play("breakLength");
         }
+
       },7000);
     }
   }
-  play(){
+  play(actualState="sessionProcessed"){
     //this.setState((state)=>({sessionProcessed:{...state.sessionProcessed, sec: state.sessionProcessed.sec - 1}}));
     if(typeof this.intervalId === 'undefined'){
       console.log('intervalId is undefined')
-      this.intervalId = setInterval(this.handleTime.bind(this),1000);
+      this.intervalId = setInterval(this.handleTime.bind(this,actualState),1000);
       console.log(this.intervalId);
       this.setState({intervalId: this.intervalId});
     }
@@ -104,9 +109,6 @@ class Pomodoro extends React.Component{
   }
 }
 ReactDOM.render(<Pomodoro />, document.getElementById("root"));
-
-
-
 
 
 
