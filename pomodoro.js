@@ -99,7 +99,7 @@ class Pomodoro extends React.Component{
         <div><i id="session-decrement" class="fas fa-angle-down" onClick={this.decrement.bind(this,"session-decrement")}></i> <strong id="session-length">{this.state.sessionLength.min}</strong> <i id="session-increment" class="fas fa-angle-up" onClick={this.increment.bind(this,"session-increment")}></i></div>
         <div>{this.state.actualState}</div>
         <div><strong id="session">{this.state.actualState === 'Session'? this.state.sessionProcessed.min : this.state.breakProcessed.min}:{this.state.actualState === 'Session'? this.state.sessionProcessed.sec : this.state.breakProcessed.sec}</strong></div>
-        <div><i id="play" class="fa fa-play" onClick={()=>{this.play()}}></i> <i id="pause" class="fa fa-pause" onClick={this.pause}></i></div>
+        <div><i id="play" class="fa fa-play" onClick={()=>{this.state.actualState === 'Session'? this.play():this.play('breakProcessed')}}></i> <i id="pause" class="fa fa-pause" onClick={this.pause}></i></div>
         <div>
           <div>
             <div id="timer-label"></div>
